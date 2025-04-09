@@ -1,0 +1,6 @@
+.vs/
+_.opendb
+_.exe
+_.obj
+_.dll
+\*.log
