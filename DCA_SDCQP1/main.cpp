@@ -1,94 +1,55 @@
-﻿/*--------------------------------------------
-# Author		: TRAN VU HOANG
-# Start date	: 09-04-2025
-# Start update	: 
-# Language		: Cplusplus
-# Version		: 1.00
-# Subject		: Trust-Region DC Algorithm
-# Name			: main.cpp
----------------------------------------------*/
-
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <cmath>
 #include <functional>
+#include <limits>
+#include <algorithm>
+#include <cassert>
 
-using namespace std;
+typedef std::vector<double> Vec;
 
-// --------------------- CONFIGURATION ---------------------
-
-const double EPSILON = 1e-6;     // độ chính xác nhỏ
-const int MAX_ITER = 1000;       // số vòng lặp tối đa
-const int L0 = 5;                // số bước DCA mỗi vòng lặp
-const double ETA1 = 0.1, ETA2 = 0.9;
-const double GAMMA1 = 0.5, GAMMA2 = 0.9;
-const double INITIAL_DELTA = 1.0;
-
-// --------------------- VECTOR TOOL ---------------------
-
-typedef vector<double> Vec;
-
-// Phép cộng giữa hai vector
+// ========== Toán tử vector cơ bản ==========
 Vec operator+(const Vec& a, const Vec& b) {
+    assert(a.size() == b.size());
     Vec res(a.size());
-
-    for (size_t i = 0; i < a.size(); i++) 
-        res[i] = a[i] + b[i];
+    for (size_t i = 0; i < a.size(); ++i) res[i] = a[i] + b[i];
     return res;
 }
 
-// Phép trừ giữa hai vector
 Vec operator-(const Vec& a, const Vec& b) {
+    assert(a.size() == b.size());
     Vec res(a.size());
-
-    for (size_t i = 0; i < a.size(); i++) 
-        res[i] = a[i] - b[i];
+    for (size_t i = 0; i < a.size(); ++i) res[i] = a[i] - b[i];
     return res;
 }
 
-// Phép nhân một scalar với một vector
 Vec operator*(double scalar, const Vec& v) {
     Vec res(v.size());
-
-    for (size_t i = 0; i < v.size(); i++) 
-        res[i] = scalar * v[i];
+    for (size_t i = 0; i < v.size(); ++i) res[i] = scalar * v[i];
     return res;
 }
 
-// Tính chuẩn 2 (Euclidean norm) của một vector
 double norm(const Vec& v) {
     double sum = 0;
-
-    for (double val : v) 
-        sum += val * val;
-    return sqrt(sum);
+    for (double val : v) sum += val * val;
+    return std::sqrt(sum);
 }
 
-// --------------------- TRUST REGION ALGORITHM ---------------------
-
-// Giả sử m(x, xk) là mô hình ước lượng hàm mục tiêu (gradient)
-Vec gradient_model(const Vec& xk, const Vec& d) {
+// ========== Chiếu lên tập Dₖ (ball) ==========
+Vec project_onto_ball(const Vec& d, double radius) {
+    double nrm = norm(d);
+    if (nrm <= radius) return d;
+    return (radius / nrm) * d;
 }
 
-// Hàm chiếu vào ràng buộc (C - {xk}) ∩ (Δk * unit ball)
-Vec projection_C(const Vec& xk, double delta_k) {
-}
-
-// Hàm để tính giá trị hàm mục tiêu f(x)
-double objective_function(const Vec& x) {
-}
-
-// Hàm gradient của hàm mục tiêu f(x)
-Vec gradient(const Vec& x) {
-}
-
-// --------------------- MAIN TRUST REGION DCA ---------------------
-
-Vec trust_region_dca(
-    const function<double(const Vec&)>& f,
-    const function<Vec(const Vec&)>& grad_f,
-    const function<Vec(const Vec&)>& hess_diag,
-    const function<Vec(const Vec&)>& projection_C,
+// ========== Trust-Region DC Algorithm ==========
+Vec trust_region_dc_algorithm(
+    std::function<double(const Vec&)> f,
+    std::function<Vec(const Vec&)> grad_f,
+    std::function<double(const Vec&)> model_m,
+    std::function<Vec(const Vec&)> grad_m,
+    std::function<double(const Vec&)> hess_norm,
+    std::function<Vec(const Vec&)> project_C,
     Vec x0,
     double delta0,
     double epsilon,
@@ -96,67 +57,55 @@ Vec trust_region_dca(
     double eta1,
     double eta2,
     double gamma1,
-    double gamma2
+    double gamma2,
+    int max_iter = 1000,
+    double tol = 1e-6
 ) {
-    Vec xk = x0;  // Khởi tạo điểm ban đầu xk
-    double delta_k = delta0;  // Khởi tạo bước nhảy ban đầu delta0
-    int k = 0;  // Số vòng lặp
+    Vec xk = x0;
+    double delta_k = delta0;
 
-    // Vòng lặp chính
-    while (true) {
-        Vec d_k(xk.size(), 0.0);  // Bước nhảy ban đầu là 0
+    for (int k = 0; k < max_iter; ++k) {
+        // === Step 1: DCA to solve trust-region subproblem ===
+        Vec d = Vec(xk.size(), 0.0);  // d^0 := 0
+        double rho = hess_norm(xk) + epsilon;
 
-        double rho_k = norm(hess_diag(xk)) + epsilon;  // Tính rho_k từ phần chéo của Hessian tại xk
-
-        // ----- DCA Inner Loop -----
-        Vec d = d_k;
-        for (int l = 0; l < l0; ++l) {
-            Vec grad_model = gradient_model(xk, d);  // Tính gradient của mô hình tại xk + d
-            Vec q = rho_k * d - grad_model;  // Tính q = rho_k * d - grad_model
-            Vec new_d = projection_C(xk - (1.0 / rho_k) * q, delta_k);  // Chiếu vào ràng buộc
-            d = new_d;  // Cập nhật d
+        for (int l = 0; l < l0 - 1; ++l) {
+            Vec q = rho * d - grad_m(xk + d);  // q_l^k
+            Vec z = (1.0 / rho) * q;
+            Vec d_next = project_onto_ball(z, delta_k);  // chiếu lên D_k
+            d = d_next;
         }
-        d_k = d;  // Cập nhật bước nhảy cuối cùng
+        Vec dk = d;
 
-        // ----- Đánh giá bước thử -----
-        Vec x_trial = xk + d_k;  // Tính điểm thử nghiệm
-        double f_xk = f(xk);  // Giá trị hàm mục tiêu tại xk
-        double f_trial = f(x_trial);  // Giá trị hàm mục tiêu tại x_trial
+        // === Step 2: Trial point acceptance ===
+        double fxk = f(xk);
+        double fxk_dk = f(xk + dk);
+        double model_xk = model_m(xk);
+        double model_xk_dk = model_m(xk + dk);
 
-        double model_decrease = -0.5 * rho_k * norm(d_k) * norm(d_k);  // Mô hình giảm giá trị hàm mục tiêu
-        double actual_decrease = f_xk - f_trial;  // Mức giảm thực tế
-        double tau_k = actual_decrease / (-model_decrease + epsilon);  // Tính tau_k
+        double tau = (fxk - fxk_dk) / std::max(model_xk - model_xk_dk, 1e-10);
 
-        // ----- Chấp nhận hay từ chối bước đi -----
-        if (tau_k >= eta1) {
-            xk = x_trial;  // Cập nhật điểm nếu tau_k >= eta1
+        if (tau >= eta1) {
+            xk = xk + dk;
         }
 
-        // ----- Cập nhật delta_k -----
-        if (tau_k >= eta2) {
-            delta_k *= 1.5;  // Nếu tau_k >= eta2, tăng delta_k lên
+        // === Step 3: Update trust-region radius ===
+        if (tau >= eta2) {
+            delta_k *= 1.5;
         }
-        else if (tau_k >= eta1) {
-            delta_k *= gamma2;  // Nếu eta1 <= tau_k < eta2, giảm delta_k theo gamma2
+        else if (tau >= eta1) {
+            delta_k *= gamma2;
         }
         else {
-            delta_k *= gamma1;  // Nếu tau_k < eta1, giảm delta_k theo gamma1
+            delta_k *= gamma1;
         }
 
-        // Kiểm tra hội tụ
-        if (norm(d_k) < epsilon) {
-            cout << "Converged at iteration " << k << endl;
-            break;  // Nếu hội tụ, dừng vòng lặp
+        // === Step 4: stopping condition ===
+        if (norm(dk) < tol) {
+            std::cout << "Converged at iteration " << k << std::endl;
+            break;
         }
-
-        k++;  // Tăng số vòng lặp lên 1
     }
 
-    return xk;  // Trả về kết quả tối ưu cuối cùng
-}
-
-int main() {
-    Vec x0 = { 1.0, 1.0 };  // Điểm ban đầu
-
-    return 0;
+    return xk;  // Output: x* ≈ xk
 }
