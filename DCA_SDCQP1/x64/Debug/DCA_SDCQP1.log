@@ -1,7 +1,2 @@
-﻿  main.cpp
-D:\hoang_tran\DCA_SDCQP1\DCA_SDCQP1\main.cpp(143,25): error C2064: term does not evaluate to a function taking 2 arguments
-      D:\hoang_tran\DCA_SDCQP1\DCA_SDCQP1\main.cpp(143,25):
-      class does not define an 'operator()' or a user defined conversion operator to a pointer-to-function or reference-to-function that takes appropriate number of arguments
-      D:\hoang_tran\DCA_SDCQP1\DCA_SDCQP1\main.cpp(143,25):
-      while trying to match the argument list '(Vec, double)'
-  
+﻿  DCA_SDCQP1.cpp
+  DCA_SDCQP1.vcxproj -> D:\hoang_tran\DCA_SDCQP1\x64\Debug\DCA_SDCQP1.exe

@@ -127,7 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="DCA_SDCQP1.cpp" />
+    <ClCompile Include="DCA_SDCQP2.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="vec_utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
