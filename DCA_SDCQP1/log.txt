@@ -1,0 +1,401 @@
+Iteration 0: xk = [2.48914, 0.410855, 0.1]
+f(xk) = 4.63014, Violation = 0.0905827, phi_beta = 4.72073
+tau = 0.97015 -> ACCEPTED
+
+Iteration 1: xk = [2.13275, 0.667247, 0.2]
+f(xk) = 2.61496, Violation = 0.0838937, phi_beta = 2.69885
+tau = 0.990714 -> ACCEPTED
+
+Iteration 2: xk = [1.87905, 0.820946, 0.3]
+f(xk) = 1.64054, Violation = 0.153546, phi_beta = 1.79409
+tau = 0.9141 -> ACCEPTED
+
+Iteration 3: xk = [1.69363, 0.906372, 0.4]
+f(xk) = 1.12614, Violation = 0.11056, phi_beta = 1.23671
+tau = 1.06587 -> ACCEPTED
+
+Iteration 4: xk = [1.55359, 0.946407, 0.5]
+f(xk) = 0.815082, Violation = 0.00762486, phi_beta = 0.822707
+tau = 1.314 -> ACCEPTED
+
+Iteration 5: xk = [1.44373, 0.956266, 0.6]
+f(xk) = 0.593891, Violation = 0.106452, phi_beta = 0.700343
+tau = 0.550751 -> ACCEPTED
+
+Iteration 6: xk = [1.35394, 0.946061, 0.7]
+f(xk) = 0.412425, Violation = 0.194143, phi_beta = 0.606568
+tau = 0.519685 -> ACCEPTED
+
+Iteration 7: xk = [1.27748, 0.922519, 0.8]
+f(xk) = 0.248517, Violation = 0.22573, phi_beta = 0.474247
+tau = 0.819052 -> ACCEPTED
+
+Iteration 8: xk = [1.20989, 0.890109, 0.9]
+f(xk) = 0.0923695, Violation = 0.17542, phi_beta = 0.267789
+tau = 1.35022 -> ACCEPTED
+
+Iteration 9: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = -0.0416401
+tau = 2.07829 -> ACCEPTED
+
+Iteration 10: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = -0.0322864
+tau = -0.675569 -> REJECTED
+
+Iteration 11: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = -0.0182557
+tau = -1.52772 -> REJECTED
+
+Iteration 12: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 0.00279024
+tau = -2.80594 -> REJECTED
+
+Iteration 13: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 0.0343592
+tau = -4.72328 -> REJECTED
+
+Iteration 14: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 0.0817126
+tau = -7.59928 -> REJECTED
+
+Iteration 15: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 0.152743
+tau = -11.9133 -> REJECTED
+
+Iteration 16: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 0.259288
+tau = -18.3843 -> REJECTED
+
+Iteration 17: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 0.419106
+tau = -28.0908 -> REJECTED
+
+Iteration 18: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 0.658832
+tau = -42.6506 -> REJECTED
+
+Iteration 19: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.01842
+tau = -64.4902 -> REJECTED
+
+Iteration 20: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.55781
+tau = -97.2497 -> REJECTED
+
+Iteration 21: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 2.36689
+tau = -146.389 -> REJECTED
+
+Iteration 22: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 3.5805
+tau = -220.098 -> REJECTED
+
+Iteration 23: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 5.40093
+tau = -330.661 -> REJECTED
+
+Iteration 24: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 8.13156
+tau = -496.506 -> REJECTED
+
+Iteration 25: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 12.2275
+tau = -745.273 -> REJECTED
+
+Iteration 26: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 18.3715
+tau = -1118.42 -> REJECTED
+
+Iteration 27: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 27.5874
+tau = -1678.15 -> REJECTED
+
+Iteration 28: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 41.4112
+tau = -2517.74 -> REJECTED
+
+Iteration 29: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 62.147
+tau = -3777.12 -> REJECTED
+
+Iteration 30: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 93.2506
+tau = -5666.2 -> REJECTED
+
+Iteration 31: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 139.906
+tau = -8499.81 -> REJECTED
+
+Iteration 32: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 209.889
+tau = -12750.2 -> REJECTED
+
+Iteration 33: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 314.864
+tau = -19125.9 -> REJECTED
+
+Iteration 34: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 472.327
+tau = -28689.3 -> REJECTED
+
+Iteration 35: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 708.52
+tau = -43034.5 -> REJECTED
+
+Iteration 36: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1062.81
+tau = -64552.2 -> REJECTED
+
+Iteration 37: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1594.25
+tau = -96828.9 -> REJECTED
+
+Iteration 38: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 2391.4
+tau = -145244 -> REJECTED
+
+Iteration 39: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 3587.13
+tau = -217866 -> REJECTED
+
+Iteration 40: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 5380.72
+tau = -326800 -> REJECTED
+
+Iteration 41: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 8071.11
+tau = -490200 -> REJECTED
+
+Iteration 42: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 12106.7
+tau = -735301 -> REJECTED
+
+Iteration 43: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 18160.1
+tau = -1.10295e+06 -> REJECTED
+
+Iteration 44: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 27240.1
+tau = -1.65443e+06 -> REJECTED
+
+Iteration 45: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 40860.2
+tau = -2.48164e+06 -> REJECTED
+
+Iteration 46: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 61290.4
+tau = -3.72247e+06 -> REJECTED
+
+Iteration 47: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 91935.6
+tau = -5.5837e+06 -> REJECTED
+
+Iteration 48: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 137903
+tau = -8.37555e+06 -> REJECTED
+
+Iteration 49: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 206855
+tau = -1.25633e+07 -> REJECTED
+
+Iteration 50: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 310283
+tau = -1.8845e+07 -> REJECTED
+
+Iteration 51: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 465424
+tau = -2.82675e+07 -> REJECTED
+
+Iteration 52: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 698137
+tau = -4.24012e+07 -> REJECTED
+
+Iteration 53: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.0472e+06
+tau = -6.36018e+07 -> REJECTED
+
+Iteration 54: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.57081e+06
+tau = -9.54027e+07 -> REJECTED
+
+Iteration 55: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 2.35621e+06
+tau = -1.43104e+08 -> REJECTED
+
+Iteration 56: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 3.53432e+06
+tau = -2.14656e+08 -> REJECTED
+
+Iteration 57: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 5.30148e+06
+tau = -3.21984e+08 -> REJECTED
+
+Iteration 58: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 7.95221e+06
+tau = -4.82976e+08 -> REJECTED
+
+Iteration 59: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.19283e+07
+tau = -7.24465e+08 -> REJECTED
+
+Iteration 60: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.78925e+07
+tau = -1.0867e+09 -> REJECTED
+
+Iteration 61: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 2.68387e+07
+tau = -1.63005e+09 -> REJECTED
+
+Iteration 62: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 4.02581e+07
+tau = -2.44507e+09 -> REJECTED
+
+Iteration 63: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 6.03871e+07
+tau = -3.6676e+09 -> REJECTED
+
+Iteration 64: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 9.05807e+07
+tau = -5.5014e+09 -> REJECTED
+
+Iteration 65: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.35871e+08
+tau = -8.2521e+09 -> REJECTED
+
+Iteration 66: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 2.03807e+08
+tau = -1.23782e+10 -> REJECTED
+
+Iteration 67: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 3.0571e+08
+tau = -1.85672e+10 -> REJECTED
+
+Iteration 68: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 4.58565e+08
+tau = -2.78509e+10 -> REJECTED
+
+Iteration 69: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 6.87847e+08
+tau = -4.17763e+10 -> REJECTED
+
+Iteration 70: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.03177e+09
+tau = -6.26644e+10 -> REJECTED
+
+Iteration 71: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.54766e+09
+tau = -9.39966e+10 -> REJECTED
+
+Iteration 72: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 2.32148e+09
+tau = -1.40995e+11 -> REJECTED
+
+Iteration 73: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 3.48223e+09
+tau = -2.11492e+11 -> REJECTED
+
+Iteration 74: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 5.22334e+09
+tau = -3.17239e+11 -> REJECTED
+
+Iteration 75: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 7.83501e+09
+tau = -4.75858e+11 -> REJECTED
+
+Iteration 76: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.17525e+10
+tau = -7.13787e+11 -> REJECTED
+
+Iteration 77: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.76288e+10
+tau = -1.07068e+12 -> REJECTED
+
+Iteration 78: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 2.64432e+10
+tau = -1.60602e+12 -> REJECTED
+
+Iteration 79: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 3.96647e+10
+tau = -2.40903e+12 -> REJECTED
+
+Iteration 80: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 5.94971e+10
+tau = -3.61355e+12 -> REJECTED
+
+Iteration 81: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 8.92456e+10
+tau = -5.42032e+12 -> REJECTED
+
+Iteration 82: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.33868e+11
+tau = -8.13048e+12 -> REJECTED
+
+Iteration 83: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 2.00803e+11
+tau = -1.21957e+13 -> REJECTED
+
+Iteration 84: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 3.01204e+11
+tau = -1.82936e+13 -> REJECTED
+
+Iteration 85: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 4.51806e+11
+tau = -2.74404e+13 -> REJECTED
+
+Iteration 86: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 6.77709e+11
+tau = -4.11605e+13 -> REJECTED
+
+Iteration 87: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.01656e+12
+tau = -6.17408e+13 -> REJECTED
+
+Iteration 88: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.52485e+12
+tau = -9.26112e+13 -> REJECTED
+
+Iteration 89: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 2.28727e+12
+tau = -1.38917e+14 -> REJECTED
+
+Iteration 90: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 3.4309e+12
+tau = -2.08375e+14 -> REJECTED
+
+Iteration 91: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 5.14635e+12
+tau = -3.12563e+14 -> REJECTED
+
+Iteration 92: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 7.71953e+12
+tau = -4.68844e+14 -> REJECTED
+
+Iteration 93: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.15793e+13
+tau = -7.03267e+14 -> REJECTED
+
+Iteration 94: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.73689e+13
+tau = -1.0549e+15 -> REJECTED
+
+Iteration 95: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 2.60534e+13
+tau = -1.58235e+15 -> REJECTED
+
+Iteration 96: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 3.90801e+13
+tau = -2.37352e+15 -> REJECTED
+
+Iteration 97: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 5.86202e+13
+tau = -3.56029e+15 -> REJECTED
+
+Iteration 98: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 8.79303e+13
+tau = -5.34043e+15 -> REJECTED
+
+Iteration 99: xk = [1.1482, 0.851803, 1]
+f(xk) = -0.0603477, Violation = 0.0187075, phi_beta = 1.31895e+14
+tau = -8.01065e+15 -> REJECTED
+
+Converged or reached max iteration at iteration 99
