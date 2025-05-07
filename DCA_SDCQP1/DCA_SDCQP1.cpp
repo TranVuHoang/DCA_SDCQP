@@ -231,7 +231,7 @@ double penalty(const vector<double>& x) {
     return max(0.0, max_val);
 }
 
-// xây dựng mô hình mBeta_k
+// xây dựng mô hình mBeta
 double m_beta(const vector<double>& xk, const vector<double>& d,
     const vector<double>& gradFx, const vector<vector<double>>& H,
     double f0_xk, double beta_k) {
@@ -277,6 +277,11 @@ vector<double> grad_mh(const vector<double>& d, double rho0, double beta_k, doub
     for (int i = 0; i < d.size(); ++i)
         grad[i] = coeff * d[i];
     return grad;
+}
+
+// tính phiBeta
+double phi_beta(const vector<double>& x, double beta) {
+    return F(x) + beta * penalty(x);
 }
 
 // Project onto trust region ball ✅
@@ -330,7 +335,7 @@ void generate_data() {
 int main() {
     generate_data();
 
-    // khởi tạo ngẫu nhiên x 
+    // khởi tạo ngẫu nhiên x° random (-10, 10) 
     vector<double> x(n);
     for (auto& xi : x) xi = dist(rng) * 10;
 
@@ -352,6 +357,9 @@ int main() {
     double delta = DELTA0;
     int total_iterations = 0;
     bool stopped_by_eps = false;
+    // Tính rho_0 và rho_{x_k}
+    double rho0 = compute_rho0(x);
+    double rho_xk = rho0 + 1e-6;
     
     int k = 0;
     while (true) {
@@ -359,10 +367,6 @@ int main() {
 
         // step 1 tính dk bằng cách giải bài toán con dạng quadratic
         for (int l = 0; l < DCA_STEPS; l++) {
-            // Tính rho_0 và rho_{x_k}
-            double rho0 = compute_rho0(x);
-            double rho_xk = rho0 + 1e-6;
-
             // 1. Tính q_k^l = ∇mh(xK + dl_k) = [0.5 * (rho0 + beta_k * rho_xk) * ||d||²]'  = (rho0 + beta_k * rho_xk) * d
             vector<double> q_kl(n);
             for (int i = 0; i < n; ++i)
@@ -372,32 +376,32 @@ int main() {
             // khởi tạo dl random 
 
 
-            //vector<double> gradF_xk = gradF(x);
-            //// 2. Tính gradient của m_g (gradF + β * ∇penalty)
-            //vector<double> grad_mg = gradF_xk;
-            //if (penalty(x) > 0.0) {
-            //    int worst = 0;
-            //    double max_vio = -1e10;
-            //    for (int j = 0; j < ellipsoids.size(); ++j) {
-            //        vector<double> Qx = matvec(ellipsoids[j].Q, x);
-            //        double val = dot(x, Qx) + dot(ellipsoids[j].r, x) + ellipsoids[j].s;
-            //        if (val > max_vio) {
-            //            max_vio = val;
-            //            worst = j;
-            //        }
-            //    }
-            //    for (int i = 0; i < n; ++i)
-            //        grad_mg[i] += beta * (2 * ellipsoids[worst].Q[i][i] * x[i] + ellipsoids[worst].r[i]);
-            //}
+            vector<double> gradF_xk = gradF(x);
+            // 2. Tính gradient của m_g (gradF + β * ∇penalty)
+            vector<double> grad_mg = gradF_xk;
+            if (penalty(x) > 0.0) {
+                int worst = 0;
+                double max_vio = -1e10;
+                for (int j = 0; j < ellipsoids.size(); ++j) {
+                    vector<double> Qx = matvec(ellipsoids[j].Q, x);
+                    double val = dot(x, Qx) + dot(ellipsoids[j].r, x) + ellipsoids[j].s;
+                    if (val > max_vio) {
+                        max_vio = val;
+                        worst = j;
+                    }
+                }
+                for (int i = 0; i < n; ++i)
+                    grad_mg[i] += beta * (2 * ellipsoids[worst].Q[i][i] * x[i] + ellipsoids[worst].r[i]);
+            }
 
-            //// 3. Gradient hiệu chỉnh: ∇m_g - q_k^l
-            //for (int i = 0; i < n; ++i)
-            //    grad_mg[i] -= q_kl[i];
+            // 3. Gradient hiệu chỉnh: ∇m_g - q_k^l
+            for (int i = 0; i < n; ++i)
+                grad_mg[i] -= q_kl[i];
 
-            //// 4. Gradient descent step
-            //double alpha = 1.0 / (rho0 + beta * rho_xk);
-            //for (int i = 0; i < n; ++i)
-            //    d[i] -= alpha * grad_mg[i];
+            // 4. Gradient descent step
+            double alpha = 1.0 / (rho0 + beta * rho_xk);
+            for (int i = 0; i < n; ++i)
+                d[i] -= alpha * grad_mg[i];
 
             // 5. Chiếu d vào trust region
             project_trust_region(d, delta);
@@ -410,13 +414,14 @@ int main() {
         for (int i = 0; i < n; i++)
             x_new[i] = x[i] + d[i];
 
-        double phi_betak_xk = F(x) + beta * penalty(x);
-        double phi_betak_xk_dk = F(x_new) + beta * penalty(x_new);
+        double phi_betak_xk = phi_beta(x, beta);
+        double phi_betak_xk_dk = phi_beta(x_new, beta);
 
         vector<double> grad = gradF(x);
 
         double m_betak_xk = F(x) + dot(grad, d) + 0.5 * RHO * dot(d, d) + beta * penalty(x);
         double m_betak_xk_dk = F(x_new) + dot(grad, d) + 0.5 * RHO * dot(d, d) + beta * penalty(x_new);
+
         double model_dec = m_betak_xk - m_betak_xk_dk;
 
         double tau_k = (model_dec > 0) ? (phi_betak_xk - phi_betak_xk_dk) / (m_betak_xk - m_betak_xk_dk) : 0.0;
@@ -431,6 +436,13 @@ int main() {
 
         if (tau_k >= ETA1) {
             x = x_new;
+            double r_k = min(penalty(x_new), penalty(x));
+
+            if (beta >= 1.0 / (norm(d) + 1e-8) || r_k <= 0)
+                beta = beta;
+            else
+                beta += DELTA_BETA;
+
             if (tau_k >= ETA2) delta *= 1.5;
             else delta *= GAMMA2;
         }
@@ -470,7 +482,6 @@ int main() {
     cout << "F(x*) = " << F(x) << endl;
     cout << "Total iterations = " << total_iterations << endl;
 
-    double rho_xk = compute_rho_xk(x);
     cout << "------------------------------------------------------------" << endl;
     cout << "rho_xk = " << rho_xk << endl;
     cout << "------------------------------------------------------------" << endl;
