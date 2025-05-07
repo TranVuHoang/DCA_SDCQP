@@ -24,7 +24,7 @@ const double RHO = 10.0;
 const double RHO_0 = 10.0;
 
 // Problem parameters ✅
-int n = 100; // Dimension
+int n = 200; // Dimension
 int k_logsumexp = 10; // Number of log terms
 
 // Random generator ✅
@@ -376,35 +376,35 @@ int main() {
             // khởi tạo dl random 
 
 
-            vector<double> gradF_xk = gradF(x);
-            // 2. Tính gradient của m_g (gradF + β * ∇penalty)
-            vector<double> grad_mg = gradF_xk;
-            if (penalty(x) > 0.0) {
-                int worst = 0;
-                double max_vio = -1e10;
-                for (int j = 0; j < ellipsoids.size(); ++j) {
-                    vector<double> Qx = matvec(ellipsoids[j].Q, x);
-                    double val = dot(x, Qx) + dot(ellipsoids[j].r, x) + ellipsoids[j].s;
-                    if (val > max_vio) {
-                        max_vio = val;
-                        worst = j;
-                    }
-                }
-                for (int i = 0; i < n; ++i)
-                    grad_mg[i] += beta * (2 * ellipsoids[worst].Q[i][i] * x[i] + ellipsoids[worst].r[i]);
-            }
+            //vector<double> gradF_xk = gradF(x);
+            //// 2. Tính gradient của m_g (gradF + β * ∇penalty)
+            //vector<double> grad_mg = gradF_xk;
+            //if (penalty(x) > 0.0) {
+            //    int worst = 0;
+            //    double max_vio = -1e10;
+            //    for (int j = 0; j < ellipsoids.size(); ++j) {
+            //        vector<double> Qx = matvec(ellipsoids[j].Q, x);
+            //        double val = dot(x, Qx) + dot(ellipsoids[j].r, x) + ellipsoids[j].s;
+            //        if (val > max_vio) {
+            //            max_vio = val;
+            //            worst = j;
+            //        }
+            //    }
+            //    for (int i = 0; i < n; ++i)
+            //        grad_mg[i] += beta * (2 * ellipsoids[worst].Q[i][i] * x[i] + ellipsoids[worst].r[i]);
+            //}
 
-            // 3. Gradient hiệu chỉnh: ∇m_g - q_k^l
-            for (int i = 0; i < n; ++i)
-                grad_mg[i] -= q_kl[i];
+            //// 3. Gradient hiệu chỉnh: ∇m_g - q_k^l
+            //for (int i = 0; i < n; ++i)
+            //    grad_mg[i] -= q_kl[i];
 
-            // 4. Gradient descent step
-            double alpha = 1.0 / (rho0 + beta * rho_xk);
-            for (int i = 0; i < n; ++i)
-                d[i] -= alpha * grad_mg[i];
+            //// 4. Gradient descent step
+            //double alpha = 1.0 / (rho0 + beta * rho_xk);
+            //for (int i = 0; i < n; ++i)
+            //    d[i] -= alpha * grad_mg[i];
 
-            // 5. Chiếu d vào trust region
-            project_trust_region(d, delta);
+            //// 5. Chiếu d vào trust region
+            //project_trust_region(d, delta);
         }
         // sau vòng lặp: d chính là d_k := d_k^{l0}
 
