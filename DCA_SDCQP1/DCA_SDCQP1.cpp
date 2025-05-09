@@ -449,6 +449,13 @@ int main() {
 
             // tính dk 
             vector<double> dk = solveSubProblemQuadratic(Q, q, rho, n, delta);
+            // in giá trị dk 
+            cout << "------------------------------------------------------------" << endl;
+            cout << "In vector dk tai vong lap thu: " << l + 1 << endl;
+            for (int i = 0; i < n; i++)
+                cout << dk[i] << " ";
+            cout << endl << "norm_dk = " << norm(dk);
+            cout << endl;
         }
 
         // Step 2 chấp nhận điểm thử xK và update penalty
@@ -494,11 +501,13 @@ int main() {
         k++;
     }
 
-    // in giá trị điểm khởi tạo x ban đầu
-    //cout << "In dk: " << endl;
-    //for (int i = 0; i < n; i++)
-    //    cout << dk[i] << " ";
-    //cout << endl;
+    // in giá trị dk 
+    cout << "------------------------------------------------------------" << endl;
+    cout << "In dk: " << endl;
+    for (int i = 0; i < n; i++)
+        cout << dk[i] << " ";
+    cout << endl;
+    cout << "------------------------------------------------------------" << endl;
 
     cout << "Optimal x found. F(x*) = " << F(x) << endl;
     cout << "Checking constraints at x*:" << endl;
@@ -520,10 +529,6 @@ int main() {
 
     cout << "F(x*) = " << F(x) << endl;
     cout << "Total iterations = " << total_iterations << endl;
-
-    cout << "------------------------------------------------------------" << endl;
-    cout << "rho_xk = " << rho_xk << endl;
-    cout << "------------------------------------------------------------" << endl;
 
     return 0;
 }
