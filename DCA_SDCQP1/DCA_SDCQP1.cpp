@@ -3,13 +3,14 @@
 #include <cmath>
 #include <algorithm>
 #include <random>
+#include <iomanip>
 #include "Eigen/Dense" // thư viện để tính giá trị riêng nhỏ nhất
 
 using namespace Eigen;
 using namespace std;
 
 // Hyperparameters ✅
-const double BETA0 = 1.0;
+const double BETA0 = 10.0;
 const double DELTA0 = 1.0;
 
 const double EPS = 1e-6;
@@ -24,7 +25,7 @@ const double RHO = 10.0;
 const double RHO_0 = 10.0;
 
 // Problem parameters ✅
-int n = 100; // Dimension
+int n = 4; // Dimension
 int k_logsumexp = 10; // Number of log terms
 
 // Random generator ✅
@@ -175,6 +176,7 @@ vector<vector<double>> hessianF(const vector<double>& x) {
 // Hàm in ma trận H ✅
 void print_matrix(const vector<vector<double>>& H, int rows = 10, int cols = 10) {
     cout << "Partial Hessian matrix H:" << endl;
+    cout << fixed << setprecision(6); 
     for (int i = 0; i < min(rows, (int)H.size()); ++i) {
         for (int j = 0; j < min(cols, (int)H[i].size()); ++j) {
             cout << H[i][j] << "\t";
@@ -207,17 +209,23 @@ double compute_rho0(const vector<double>& x) {
     return max(0.0, -lambda_min);
 }
 
-// Hàm tính rho_xk = rho° + epsilon ✅
-double compute_rho_xk(const vector<double>& x) {
-    return compute_rho0(x) + 1e-6;
-}
-
 // Xây dựng mô hình m0
 double m0(const vector<double>& xk, const vector<double>& dk, const vector<double>& gradF, const vector<vector<double>>& H) {
     vector<double> Hd = matvec(H, dk);
     double gradientF = dot(gradF, dk);
     double hessainF = 0.5 * dot(dk, Hd);
     return F(xk) + gradientF + hessainF;
+}
+
+// Penalty function p ✅
+double pel(const vector<double>& x) {
+    double max_val = 0.0;
+    for (auto& E : ellipsoids) {
+        vector<double> Qx = matvec(E.Q, x);
+        double val = dot(x, Qx) + dot(E.r, x) + E.s;
+        max_val = max(max_val, val);
+    }
+    return max_val;
 }
 
 // Penalty function p+ ✅
@@ -251,11 +259,12 @@ double m_beta(const vector<double>& xk, const vector<double>& d,
     // Tổng lại
     return f_approx + beta_k * penalty_val;
 }
+// F(x) + dot(grad, d) + 0.5 * RHO * dot(d, d) + beta * penalty(x);
 
 // phân ra DC m_g - m_h
 // Xây dựng m_h
 double m_h(const vector<double>& d, const vector<double>& gradFx, double rho0, double beta_k) {
-    double rho_xk = norm(gradFx);  // rho_xk = ||∇f₀(x_k)||
+    double rho_xk = 1e-6;
     double coeff = (rho0 + beta_k * rho_xk) / 2.0;
     return (rho0 + beta_k * rho_xk) / 2.0 * dot(d, d);
 }
@@ -279,7 +288,7 @@ vector<double> grad_mh(const vector<double>& d, double rho0, double beta_k, doub
     return grad;
 }
 
-// tính phiBeta
+// tính phiBeta ✅
 double phi_beta(const vector<double>& x, double beta) {
     return F(x) + beta * penalty(x);
 }
@@ -392,7 +401,8 @@ int main() {
     cout << endl;
 
     vector<vector<double>> H = hessianF(x); // Tính Hessian tại x
-    //print_matrix(H); // In ra 10×10 đầu tiên mặc định
+    cout << "------------------------------------------------------------" << endl;
+    print_matrix(H); // In ra 10×10 đầu tiên mặc định
 
     double Fx0 = F(x); // Lưu F(x0)
     cout << "------------------------------------------------------------" << endl;
@@ -407,11 +417,14 @@ int main() {
 
     // Tính rho_0 và rho_{x_k}
     double rho0 = compute_rho0(x);
-    double rho_xk = rho0 + 1e-6;
+    cout << "rho0 = " << rho0 << endl;
+    double rho_xk = 1e-6;
+    cout << "rho_xk = " << rho_xk << endl;
 
+    vector<double> dk(n);
     int k = 0;
     while (true) {
-        vector<double> d(n, 0.0);  // d_k^0 ban đầu
+        vector<double> d(n, 0.0);  // d0 ban đầu
 
         // step 1 tính dk bằng cách giải bài toán con dạng quadratic
         for (int l = 0; l < DCA_STEPS; l++) {
@@ -435,63 +448,24 @@ int main() {
             int rho = 10;
 
             // tính dk 
-            vector<double> d_k = solveSubProblemQuadratic(Q, q, rho, n, delta);
-
-
-
-            //vector<double> gradF_xk = gradF(x);
-            //// 2. Tính gradient của m_g (gradF + β * ∇penalty)
-            //vector<double> grad_mg = gradF_xk;
-            //if (penalty(x) > 0.0) {
-            //    int worst = 0;
-            //    double max_vio = -1e10;
-            //    for (int j = 0; j < ellipsoids.size(); ++j) {
-            //        vector<double> Qx = matvec(ellipsoids[j].Q, x);
-            //        double val = dot(x, Qx) + dot(ellipsoids[j].r, x) + ellipsoids[j].s;
-            //        if (val > max_vio) {
-            //            max_vio = val;
-            //            worst = j;
-            //        }
-            //    }
-            //    for (int i = 0; i < n; ++i)
-            //        grad_mg[i] += beta * (2 * ellipsoids[worst].Q[i][i] * x[i] + ellipsoids[worst].r[i]);
-            //}
-
-            //// 3. Gradient hiệu chỉnh: ∇m_g - q_k^l
-            //for (int i = 0; i < n; ++i)
-            //    grad_mg[i] -= d_new[i];
-
-            //// 4. Gradient descent step
-            //double alpha = 1.0 / (rho0 + beta * rho_xk);
-            //for (int i = 0; i < n; ++i)
-            //    d[i] -= alpha * grad_mg[i];
-
-            //// 5. Chiếu d vào trust region
-            //project_trust_region(d, delta);
+            vector<double> dk = solveSubProblemQuadratic(Q, q, rho, n, delta);
         }
-        // sau vòng lặp: d chính là d_k := d_k^{l0}
-
 
         // Step 2 chấp nhận điểm thử xK và update penalty
         vector<double> x_new(n);
         for (int i = 0; i < n; i++)
-            x_new[i] = x[i] + d[i];
+            x_new[i] = x[i] + dk[i]; // xk + dk
 
-        double phi_betak_xk = phi_beta(x, beta);
-        double phi_betak_xk_dk = phi_beta(x_new, beta);
+        double phi_betak_xk = phi_beta(x, beta); // ✅
+        double phi_betak_xk_dk = phi_beta(x_new, beta); // ✅
 
-        vector<double> grad = gradF(x);
+        //vector<double> grad = gradF(x);
 
-        double m_betak_xk = F(x) + dot(grad, d) + 0.5 * RHO * dot(d, d) + beta * penalty(x);
-        double m_betak_xk_dk = F(x_new) + dot(grad, d) + 0.5 * RHO * dot(d, d) + beta * penalty(x_new);
+        double m_betak_xk = F(x) + beta * penalty(x); // ✅
+        double m_betak_xk_dk = F(x) + dot(gradF(x), dk) + 0.5 * dot(dk, matvec(hessianF(x), dk)) + beta * penalty(x_new);
 
-        double model_dec = m_betak_xk - m_betak_xk_dk;
+        double tau_k = (phi_betak_xk - phi_betak_xk_dk) / max(1e-12, (m_betak_xk - m_betak_xk_dk));
 
-        double tau_k = (model_dec > 0) ? (phi_betak_xk - phi_betak_xk_dk) / (m_betak_xk - m_betak_xk_dk) : 0.0;
-
-        //if ((m_betak_xk - m_betak_xk_dk) != 0) {
-        //    tau_k = (phi_betak_xk - phi_betak_xk_dk) / (m_betak_xk - m_betak_xk_dk);
-        //}
 
         cout << "Iter " << k << ": phi = " << phi_betak_xk << ", tau_k = " << tau_k << ", beta = " << beta << ", dk = " << norm(d) << endl;
 
@@ -501,7 +475,7 @@ int main() {
             x = x_new;
             double r_k = min(penalty(x_new), penalty(x));
 
-            if (beta >= 1.0 / (norm(d) + 1e-8) || r_k <= 0)
+            if (beta >= 1.0 / (norm(dk) + 1e-8) || r_k <= 0)
                 beta = beta;
             else
                 beta += DELTA_BETA;
@@ -513,16 +487,18 @@ int main() {
             delta *= GAMMA1;
         }
 
-        if ((penalty(x) > 0.0) && (beta < 1.0 / (norm(d) + 1e-8))) {
-            beta += DELTA_BETA;
-        }
-
         if (norm(d) < EPS) {
             stopped_by_eps = true;
             break;
         }
         k++;
     }
+
+    // in giá trị điểm khởi tạo x ban đầu
+    //cout << "In dk: " << endl;
+    //for (int i = 0; i < n; i++)
+    //    cout << dk[i] << " ";
+    //cout << endl;
 
     cout << "Optimal x found. F(x*) = " << F(x) << endl;
     cout << "Checking constraints at x*:" << endl;
