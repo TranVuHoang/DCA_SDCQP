@@ -24,7 +24,7 @@ const double RHO = 10.0;
 const double RHO_0 = 10.0;
 
 // Problem parameters ✅
-int n = 200; // Dimension
+int n = 100; // Dimension
 int k_logsumexp = 10; // Number of log terms
 
 // Random generator ✅
@@ -48,9 +48,9 @@ vector<Ellipsoid> ellipsoids;
 double dot(const vector<double>& a, const vector<double>& b) {
     double res = 0.0;
 
-    for (int i = 0; i < a.size(); ++i) 
+    for (int i = 0; i < a.size(); ++i)
         res += a[i] * b[i];
-    
+
     return res;
 }
 
@@ -60,7 +60,7 @@ vector<double> matvec(const vector<vector<double>>& M, const vector<double>& x) 
     for (int i = 0; i < M.size(); ++i)
         for (int j = 0; j < M[i].size(); ++j)
             res[i] += M[i][j] * x[j];
-    
+
     return res;
 }
 
@@ -81,17 +81,17 @@ double F(const vector<double>& x) {
     // 3. Phần log-sum-exp: -log(Σ exp(aᵢ^T x + bᵢ)) ✅
     // 3.1 Tính: (aᵢ^T x + bᵢ)
     vector<double> exps(k_logsumexp);
-    for (int i = 0; i < k_logsumexp; ++i) { 
+    for (int i = 0; i < k_logsumexp; ++i) {
         exps[i] = dot(A[i], x) + b[i];
     }
 
     // 3.2 Tính: Σexp(aᵢ^T x + bᵢ)
     double sum_exp = 0.0;
-    for (int i = 0; i < k_logsumexp; ++i) 
+    for (int i = 0; i < k_logsumexp; ++i)
         sum_exp += exp(exps[i]);
 
     // 3.3 Tính: log(Σ exp(aᵢ^T x + bᵢ))
-    double logsumexp = log(sum_exp); 
+    double logsumexp = log(sum_exp);
 
     return quad + linear - logsumexp; // trả về F
 }
@@ -100,21 +100,21 @@ double F(const vector<double>& x) {
 vector<double> gradF(const vector<double>& x) {
     // 1. Tính: (0.5 * x^T.D.x + c^T.x)' = Dx + c ✅
     vector<double> gradientF = matvec(D, x);  // D * x
-    for (int i = 0; i < n; i++) 
+    for (int i = 0; i < n; i++)
         gradientF[i] += c[i];  // + c
 
     // 2. Tính: (log-sum-exp)'
 
     // Tính: (aᵢ^T x + bᵢ) ✅
     vector<double> exps(k_logsumexp);
-    for (int i = 0; i < k_logsumexp; ++i) { 
+    for (int i = 0; i < k_logsumexp; ++i) {
         exps[i] = dot(A[i], x) + b[i];
     }
 
     // Tính: Σexp(aᵢ^T x + bᵢ) 
     double sum_exp = 0.0;
     for (int i = 0; i < k_logsumexp; i++)
-        exps[i] = exp(exps[i]), 
+        exps[i] = exp(exps[i]),
         sum_exp += exps[i];
 
     // Tính F'
@@ -183,7 +183,7 @@ void print_matrix(const vector<vector<double>>& H, int rows = 10, int cols = 10)
     }
 }
 
-/* Tính rho_xk theo công thức (24) */
+/* Tính rho_xk theo công thức (24)  ✅*/
 // Hàm chuyển từ vector<vector<double>> sang Eigen::MatrixXd ✅
 MatrixXd toEigenMatrix(const vector<vector<double>>& mat) {
     int rows = mat.size();
@@ -207,7 +207,7 @@ double compute_rho0(const vector<double>& x) {
     return max(0.0, -lambda_min);
 }
 
-// Hàm tính rho_xk = rho° + epsilon
+// Hàm tính rho_xk = rho° + epsilon ✅
 double compute_rho_xk(const vector<double>& x) {
     return compute_rho0(x) + 1e-6;
 }
@@ -220,7 +220,7 @@ double m0(const vector<double>& xk, const vector<double>& dk, const vector<doubl
     return F(xk) + gradientF + hessainF;
 }
 
-// Penalty function p+
+// Penalty function p+ ✅
 double penalty(const vector<double>& x) {
     double max_val = 0.0;
     for (auto& E : ellipsoids) {
@@ -288,7 +288,8 @@ double phi_beta(const vector<double>& x, double beta) {
 void project_trust_region(vector<double>& d, double delta) {
     double norm_d = norm(d);
     if (norm_d > delta) {
-        for (auto& di : d) di *= delta / norm_d;
+        for (auto& di : d)
+            di *= delta / norm_d;
     }
 }
 
@@ -296,7 +297,7 @@ void project_trust_region(vector<double>& d, double delta) {
 void generate_data() {
     // khởi tạo ma trận chéo D xác định dương kích thước D(nxn)
     D = vector<vector<double>>(n, vector<double>(n, 0.0));
-    for (int i = 0; i < n; ++i) 
+    for (int i = 0; i < n; ++i)
         D[i][i] = 0.1 + abs(dist(rng));
 
     // khởi tạo vector c kích thước c(n)
@@ -319,7 +320,7 @@ void generate_data() {
 
         // khởi tạo ma trận chéo Q
         E.Q = vector<vector<double>>(n, vector<double>(n, 0.0));
-        for (int i = 0; i < n; ++i) 
+        for (int i = 0; i < n; ++i)
             E.Q[i][i] = 0.01 + abs(dist(rng));
 
         // khởi tạo vector r
@@ -332,16 +333,61 @@ void generate_data() {
     }
 }
 
+// Hàm solveSubProblemQuadratic
+vector<double> solveSubProblemQuadratic(vector<vector<double>>& Q, vector<double>& q, double rho, int n, double delta) {
+    // khởi tạo vector u random với kích thước n
+    vector<double> u(n);
+    for (auto& ui : u) {
+        ui = dist(rng);
+    }
+
+    int k = 0;
+    while (true) {
+        // Tính gradientH = (rho.I - Q).u - q
+        vector<double> GradH(n, 0);
+        for (int i = 0; i < n; i++) {
+            double sum = 0.0;
+            for (int j = 0; j < n; j++)
+                sum -= Q[i][j] * u[j];
+            sum += rho * u[i];
+            GradH[i] = sum - q[i];
+        }
+
+        // Tính u_new = rho * u - GradH
+        vector<double> u_new(n);
+        for (int i = 0; i < n; i++)
+            u_new[i] = rho * u[i] - GradH[i];
+
+        // Chiếu u_new / rho lên ball: nếu ||u_new/rho|| > delta ⇒ scale lại
+        double norm_u = norm(u_new) / rho;
+        if (norm_u <= delta) {
+            for (int i = 0; i < n; i++)
+                u[i] = u_new[i] / rho;
+        }
+        else {
+            for (int i = 0; i < n; i++)
+                u[i] = (u_new[i] / norm_u) * delta;
+        }
+        if (norm(GradH) < 1e-5)
+            break;
+
+        k++;
+    }
+    return u; // chính là d_k
+}
+
 int main() {
     generate_data();
 
     // khởi tạo ngẫu nhiên x° random (-10, 10) 
     vector<double> x(n);
-    for (auto& xi : x) xi = dist(rng) * 10;
+    for (auto& xi : x) {
+        xi = dist(rng) * 10;
+    }
 
     // in giá trị điểm khởi tạo x ban đầu
     cout << "Initial x_0: " << endl;
-    for (int i = 0; i < n; i++) 
+    for (int i = 0; i < n; i++)
         cout << x[i] << " ";
     cout << endl;
 
@@ -355,25 +401,42 @@ int main() {
 
     double beta = BETA0;
     double delta = DELTA0;
+
     int total_iterations = 0;
     bool stopped_by_eps = false;
+
     // Tính rho_0 và rho_{x_k}
     double rho0 = compute_rho0(x);
     double rho_xk = rho0 + 1e-6;
-    
+
     int k = 0;
     while (true) {
         vector<double> d(n, 0.0);  // d_k^0 ban đầu
 
         // step 1 tính dk bằng cách giải bài toán con dạng quadratic
         for (int l = 0; l < DCA_STEPS; l++) {
-            // 1. Tính q_k^l = ∇mh(xK + dl_k) = [0.5 * (rho0 + beta_k * rho_xk) * ||d||²]'  = (rho0 + beta_k * rho_xk) * d
-            vector<double> q_kl(n);
-            for (int i = 0; i < n; ++i)
-                q_kl[i] = (rho0 + beta * rho_xk)  * d[i];
+            // 1. Tính d_new(q_k^l) = ∇mh(xK + dl_k) = [0.5 * (rho0 + beta_k * rho_xk) * ||d||²]'  = (rho0 + beta_k * rho_xk) * d
+            vector<double> d_new(n);
+            for (int i = 0; i < n; i++)
+                d_new[i] = (rho0 + beta * rho_xk) * d[i]; // trả về vector d_new chính là qlk ✅
 
             // 2. update lại dl bằng cách giải bài toán Min mg(xk+dl, xk) - <q, dl>
-            // khởi tạo dl random 
+            // Tính Q =  Hess(xk)+(Ro1+βkRo2)⋅I
+            vector<vector<double>> Q = hessianF(x);
+            for (int i = 0; i < n; i++)
+                Q[i][i] += (rho0 + beta * rho_xk);
+
+            // Tính q = GradF(xk) - d_new
+            vector<double> q = gradF(x);
+            for (int i = 0; i < n; i++)
+                q[i] -= d_new[i];
+
+            //rho = 10
+            int rho = 10;
+
+            // tính dk 
+            vector<double> d_k = solveSubProblemQuadratic(Q, q, rho, n, delta);
+
 
 
             //vector<double> gradF_xk = gradF(x);
@@ -396,7 +459,7 @@ int main() {
 
             //// 3. Gradient hiệu chỉnh: ∇m_g - q_k^l
             //for (int i = 0; i < n; ++i)
-            //    grad_mg[i] -= q_kl[i];
+            //    grad_mg[i] -= d_new[i];
 
             //// 4. Gradient descent step
             //double alpha = 1.0 / (rho0 + beta * rho_xk);
@@ -430,7 +493,7 @@ int main() {
         //    tau_k = (phi_betak_xk - phi_betak_xk_dk) / (m_betak_xk - m_betak_xk_dk);
         //}
 
-        cout << "Iter " << k << ": phi = " << phi_betak_xk << ", tau_k = " << tau_k << ", beta = " << beta << ", dk = "<< norm(d)<< endl;
+        cout << "Iter " << k << ": phi = " << phi_betak_xk << ", tau_k = " << tau_k << ", beta = " << beta << ", dk = " << norm(d) << endl;
 
         total_iterations = k + 1;
 
