@@ -1,4 +1,1 @@
-﻿  DCA_SDCQP1.cpp
-D:\hoang_tran\DCA_SDCQP1\DCA_SDCQP1\DCA_SDCQP1.cpp(191,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\hoang_tran\DCA_SDCQP1\DCA_SDCQP1\DCA_SDCQP1.cpp(192,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  DCA_SDCQP1.vcxproj -> D:\hoang_tran\DCA_SDCQP1\x64\Debug\DCA_SDCQP1.exe
+﻿  DCA_SDCQP1.vcxproj -> D:\hoang_tran\DCA_SDCQP1\x64\Debug\DCA_SDCQP1.exe
