@@ -34,14 +34,14 @@ public:
 // 1. Hàm tính: Tích vô hướng của 2 vector. ✅
 double calculation::vecvec(const vector<double>& x, const vector<double>& y)
 {
-    double result = 0.0;
-    int sizeX = x.size();
-
     // kiểm tra kích thước 2 vector. ✅
     if (x.size() != y.size()) {
         cerr << "Error: vector sizes do not match in vecvec()." << endl; // in ra thông báo lỗi kích thước 2 vector không khớp nhau.
         exit(1); // dừng chương trình
     }
+
+    double result = 0.0;
+    int sizeX = x.size();
 
     // tính tích vô hướng của 2 vector.
     for (int i = 0; i < sizeX; i++)
@@ -71,7 +71,7 @@ vector<double> calculation::matvec(const vector<vector<double>>& M, const vector
 vector<double> calculation::operatorPlus(const vector<double>& x, const vector<double>& y)
 {
     if (x.size() != y.size()) {
-        cerr << "Error: vector size mismatch in operatorPlus." << endl;
+        cerr << "Error: vector size mismatch in operatorPlus." << endl; // in ra thông báo lỗi kích thước 2 vector không khớp nhau.
         exit(1);
     }
 

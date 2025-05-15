@@ -22,7 +22,7 @@ public:
     double rho; // tham số tùy chỉnh cho bài toán con
     double R;   //R là bán kính của ball được tính bằng Max Si
 
-    // Phương thức khởi tạo subproblem
+    // Phương thức khởi tạo subproblem. ✅
     subproblem(vector<vector<double>> Q_sub, vector<double> q_sub, int n_sub, double R_sub)
     {
         Q = Q_sub;
@@ -35,8 +35,8 @@ public:
     // Hàm này tính đạo hàm của hàm H trong bài toán con của DCA để thu được u_new. ✅
     void GradH() {
         // ∇H(u) = Q·u + q
-        vector<double> Qu = cal.matvec(Q, u);           // Tính: Q·u
-        vector<double> gradH = cal.operatorPlus(Qu, q); // Tính: Q·u + q
+        vector<double> Qu = cal.matvec(Q, u);           // Tính: Q·u ✅
+        vector<double> gradH = cal.operatorPlus(Qu, q); // Tính: Q·u + q ✅
 
         // u_new = ρ·u − ∇H(u)
         for (int i = 0; i < n; ++i)
@@ -63,7 +63,7 @@ public:
         // Khai báo phân phối đều số thực trên đoạn [−1.0, 1.0]. ✅
         uniform_real_distribution<double> dist(-1.0, 1.0);
 
-        int k_logsumexp = 10; // Number of log terms
+        // int k_logsumexp = 10; // Number of log terms. ✅ !!!
 
         // khởi tạo vector u random với kích thước n. ✅
         for (auto& ui : u)
@@ -113,11 +113,11 @@ public:
 class problem
 {
 public:
-    // các hàm tính toán
+    // các hàm tính toán. ✅
     calculation cal;
 
     // Problem parameters ✅
-    int n, k, mc; //n: số biến x của hàm F lớn, k số hàm exp, mc là số ràng buộc
+    int n, k, mc; //n: số biến x của hàm F lớn, k số hàm exp, mc là số ràng buộc. ✅
 
     vector<vector<double>> Q;   //D(nxn)
     vector<double> c;           //c(n)
@@ -140,17 +140,62 @@ public:
     vector<vector<double>> hessianf(int i, const vector<double>& x);                // Hàm tính hessainF
 
     double m(int i, const vector<double> x_in, const vector<double> d);
+    double p(const vector<double> x_in, const vector<double> d);
     double penalty(const vector<double> x_in);
     double mbeta(const vector<double> x_in, const vector<double> d, double beta);
     double mbetaxx(const vector<double> x_in, double beta);
-    double p(const vector<double> x_in, const vector<double> d);
-    double phibetak(const vector<double> x_in, const vector<double> d, double beta);
+    //double phibetak(const vector<double> x_in, const vector<double> d, double beta);
+    double phibetak(const vector<double> x_in, const vector<double>d, double beta);
 };
 
-// Hàm tính penalty p 
+
+
+// Gradient of f(x) ✅
+vector<double> problem::gradf(int i, const vector<double>& x_in)
+{
+    if (i == 0)
+    {
+        // 1. Tính: (0.5 * x^T.D.x + c^T.x)' = Dx + c ✅
+        vector<double> gradientF = cal.matvec(Q, x_in);  // D * x
+        for (int i = 0; i < n; i++)
+            gradientF[i] += c[i];  // + c
+
+        // 2. Tính: (log-sum-exp)'
+        // Tính: (aᵢ^T x + bᵢ) ✅
+        vector<double> exps(k);
+        for (int i = 0; i < k; ++i) {
+            exps[i] = cal.vecvec(a[i], x_in) + b[i];
+        }
+
+        // Tính: Σexp(aᵢ^T x + bᵢ) 
+        double sum_exp = 0.0;
+        for (int i = 0; i < k; i++)
+            exps[i] = exp(exps[i]),
+            sum_exp += exps[i];
+
+        // Tính F'
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < k; ++j) {
+                gradientF[i] -= (exps[j] / sum_exp) * a[j][i];
+            }
+        }
+        return gradientF; // trả về 1 vector số thực chính là ∇f(x) = Dx + c − ∑p_i(x)*a_i       ​
+
+    }
+
+}
+
+// Hàm tính: φβ(x)
+double problem::phibetak(const vector<double> x_in, const vector<double>d, double beta)
+{
+    return f(0, x_in) + beta * penalty(x_in);
+}
+
+// Hàm tính p !!!
 double problem::p(const vector<double> x_in, const vector<double> d)
 {
     vector<double> value(mc, 0);
+
     for (int i = 1; i <= mc; i++)
         value[i] = m(i, x_in, d);
     double maxc = value[0];
@@ -159,40 +204,7 @@ double problem::p(const vector<double> x_in, const vector<double> d)
     return maxc;
 }
 
-vector<double> problem::gradf(int i, const vector<double>& x_in)
-{
-    if (i == 0)
-    {
-        vector<double> g(n, 0); //grad
-        vector<double> p(k, 0.0);
-        double mau = 0;
-        for (int i = 0; i < k; i++)
-        {
-            double ax = cal.vecvec(a[i], x_in);
-            p[i] = exp(ax + b[i]);
-            mau += p[i];
-        }
-        for (int i = 0; i < k; i++) p[i] /= mau;
-
-        vector<double> second(n, 0);
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < k; j++)
-                second[i] += p[j] * a[j][i];
-
-        vector<double> Dx = cal.matvec(Q, x_in);
-        for (int i = 0; i < n; i++)
-            Dx[i] += c[i] - second[i];
-        return Dx;  //∇f(x) = Dx + c − ∑p_i(x)*a_i       ​
-
-    }
-
-}
-
-double problem::phibetak(const vector<double> x_in, const vector<double> d, double beta)
-{
-    return f(0, x_in) + beta * penalty(x_in);
-}
-
+// Hàm tính p+
 double problem::penalty(const vector<double> x_in)
 {
     double max_val = 0.0;
@@ -205,6 +217,21 @@ double problem::penalty(const vector<double> x_in)
     if (max_val < 0) max_val = 0;
     return max_val;
 }
+
+//double problem::penalty(const vector<double>& x_in)
+//{
+//    double max_val = 0.0;
+//    for (auto& E : ellipsoids)
+//    {
+//        vector<double> Qx = cal.matvec(E.Q, x_in);              // Q_i * x
+//        double quad = cal.vecvec(x_in, Qx);                     // xᵀ Q x
+//        double linear = cal.vecvec(E.q, x_in);                  // qᵀ x
+//        double val = quad + linear + E.r;                       // f_i(x)
+//        max_val = max(max_val, val);
+//    }
+//    return max(0.0, max_val);  // p⁺(x)
+//}
+
 
 double problem::mbeta(const vector<double> x_in, const vector<double> d, double beta)
 {
@@ -311,10 +338,10 @@ double problem::f(int i, const vector<double>& x_in)
 vector<vector<double>> problem::hessianf(int i, const vector<double>& x_in)
 {
     vector<vector<double>> H(n, vector<double>(n, 0.0));  // Khởi tạo ma trận Hessian ban đầu
-    // 1. Tính: (0.5 * x^T.D.x + c^T.x)" = (D * x)' = D ✅
 
     if (i == 0)
     {
+        // 1. Tính: (0.5 * x^T.D.x + c^T.x)" = (D * x)' = D ✅
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
                 H[i][j] = Q[i][j];  // D (hàm chuẩn)
@@ -366,21 +393,23 @@ class DCA : public problem // class DCA kế thừa class problem
 {
     calculation cal; // !!!
 
-    const double BETA0 = 10.0;
-    double BETAK;
-    const double DELTA = 0.8; //DELTA LÀ LƯỢNG THÊM VÀO BETAK mỗi khi update BETAK
-    const double EPS = 1e-6;
-    double DELTA0 = 10.0; // bán kính ball 
+    const double BETA0  = 10.0;  // Hệ số penalty ban đầu (β0 > 0)
+    double DELTA_BETA   = 10.0;  // Bán kính trust region (Δ0 > 0) 
+    
+    const double EPS    = 1e-6;    
+    double DELTA  = 0.8;        // DELTA LÀ LƯỢNG THÊM VÀO BETAK mỗi khi update BETAK
+     
+    double BETAK;                // β_k
 
-    const int DCA_STEPS = 5; // l° số bước lặp của step 1
-    const int MAX_ITER = 1000;
+    const int DCA_STEPS = 5;     // l° số bước lặp của step 1
+    const int MAX_ITER  = 1000;
 
-    const double ETA1 = 0.001, ETA2 = 0.25;
+    const double ETA1   = 0.001, ETA2 = 0.25;
     const double GAMMA1 = 0.5, GAMMA2 = 0.5;
 
-    const double RHO = 10.0; // tham số rho cho bài toán QP con
-    const double RHO1 = 10.0;
-    const double RHO2 = 10.0;
+    const double RHO    = 10.0;  // tham số rho cho bài toán QP con
+    const double RHO1   = 10.0;   
+    const double RHO2   = 10.0;
 
     int l0 = 10;
 
@@ -491,12 +520,13 @@ void DCA::QP_solve()
     }
 }
 
-// Step 1.1 Hàm khởi tạo cho bài toán QP của step 1
+// Step 1.1 Hàm khởi tạo cho bài toán QP của step 1. ✅
 void DCA::QP_init()
 {
-    // khởi tạo vector d kích thước n với các giá trị 0. ✅
-    d = vector<double>(n, 0.0);
-    //sau khởi tạo d = 0 hết
+    // khởi tạo vector bước đi: d kích thước n với các giá trị 0. ✅
+    d = vector<double>(n, 0.0); // gán giá trị khởi tạo d = 0 vì vector<double> d; đã khai báo trước đó
+
+    vector<double> d_prev(n, 0.0);    // để lưu d^{l₀ - 1}
 }
 
 // 1.2 Hàm tính đạo hàm của H của bài toán chính để thu được vector d_new ✅
